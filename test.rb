@@ -1,2 +1,6 @@
-Bundler.require
-Pr00f::DSL.run IO.read './meta_proof/0.rb'
+require 'pr00f'
+
+Dir["./meta_proof/**/*.rb"].each do |proof|
+  Pr00f::DSL.run IO.read proof
+  puts "The #{proof} is sound."
+end
