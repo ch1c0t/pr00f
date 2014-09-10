@@ -1,4 +1,4 @@
-lib = File.expand_path './lib/', __FILE__
+lib = File.expand_path './lib/'
 $:.unshift lib unless $:.include? lib
 
 Gem::Specification.new do |g|
