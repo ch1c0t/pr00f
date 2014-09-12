@@ -2,19 +2,33 @@ module Pr00f
   class Constant
     include RespondToChecker
 
-    def initialize constant, &b
+    attr_reader :object
+    def initialize constant, &requirements
       @object = constant
+      @tests  = []
+
       @instances = []
 
-      instance_eval &b
+      instance_eval &requirements
+    end
+
+    def fulfill_requirements?
+      @tests.all? &:passed?
     end
 
     def constants array
-      undefined = array.reject { |constant| @object.constants.include? constant }
+      test = Test.new do
+        undefined_constants = array.reject { |constant| object.constants.include? constant }
 
-      unless undefined.empty?
-        raise "#{@object} is supposed to include #{undefined}, which doesn't seem to be the case."
+        fail_message "#{object} is supposed to include #{undefined_constants}, which doesn't seem to be the case."
+        undefined_constants.empty?
       end
+
+      @tests << test
+
+      # if a failure occurred so early, it would be a very little use in proceeding
+      # without giving it a look first
+      (puts test.fail_message; exit) if test.check! == :failed
     end
 
     def instance symbol = :unnamed, &b
@@ -29,8 +43,6 @@ module Pr00f
         instance.instance_eval &b
       end
     end
-
-    private
 
     def define_method_for_instance instance
       self.class.send :define_method, instance.name do |&b|
