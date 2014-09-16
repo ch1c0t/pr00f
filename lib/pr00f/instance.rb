@@ -2,16 +2,18 @@ module Pr00f
   class Instance
     include RespondToChecker
 
-    attr_reader :name
-    def initialize symbol, &b
-      @name = symbol
+    attr_reader :object, :name, :tests
+    def initialize name: :unnamed, &b
+      @object = self
+      @name = name
+
+      @tests = []
 
       begin
         @object = b.call
-      rescue Exception => e
+      rescue
         # TODO: Give a bit more helpful information here.
-        p e
-        raise "An error occurred when trying to create the instance #{@name}."
+        raise "An error occurred when trying to create the instance #{@name}. #{$!.inspect}"
       end
     end
   end

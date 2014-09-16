@@ -1,6 +1,9 @@
 require 'pr00f'
+require 'pry'
 
-Dir["./meta_proof/**/*.rb"].each do |proof|
-  Pr00f::DSL.run IO.read proof
-  puts "The #{proof} is sound."
+reports = Dir["./meta_proof/**/*.rb"].map do |proof|
+  Pr00f::Report.new IO.read proof
 end
+
+binding.pry
+reports

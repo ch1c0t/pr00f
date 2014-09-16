@@ -2,7 +2,7 @@ module Pr00f
   class Constant
     include RespondToChecker
 
-    attr_reader :object
+    attr_reader :object, :passed_tests, :failed_tests
     def initialize constant, &requirements
       @object = constant
       @tests  = []
@@ -10,6 +10,9 @@ module Pr00f
       @instances = []
 
       instance_eval &requirements
+
+      @tests += @instances.map(&:tests).reduce(&:+) unless @instances.empty?
+      @passed_tests, @failed_tests = @tests.partition { |test| test.check! == :passed }
     end
 
     def fulfill_requirements?
@@ -31,11 +34,10 @@ module Pr00f
       (puts test.fail_message; exit) if test.check! == :failed
     end
 
-    def instance symbol = :unnamed, &b
-      instance = Instance.new symbol, &b
+    def instance name = :unnamed, &b
+      instance = Instance.new name: name, &b
+      define_method_for_instance instance unless name == :unnamed
       @instances << instance
-
-      define_method_for_instance instance unless symbol == :unnamed
     end
 
     def all_instances &b

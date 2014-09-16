@@ -10,4 +10,6 @@ Gem::Specification.new do |g|
   g.require_path = 'lib'
   g.add_development_dependency 'pry'
   g.add_development_dependency 'pry-byebug'
+  g.add_development_dependency 'awesome_print'
+  g.add_development_dependency 'rspec'
 end

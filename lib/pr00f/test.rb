@@ -9,6 +9,8 @@ module Pr00f
     end
 
     def check!
+      return @status unless @status == :pending
+
       begin
         bool = instance_eval &@code
       rescue StandardError => e
