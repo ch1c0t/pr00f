@@ -12,7 +12,7 @@ module Pr00f
       instance_eval &requirements
 
       @tests += @instances.map(&:tests).reduce(&:+) unless @instances.empty?
-      @passed_tests, @failed_tests = @tests.partition { |test| test.check! == :passed }
+      @passed_tests, @failed_tests = @tests.partition { |test| test.passed? }
     end
 
     def fulfill_requirements?
@@ -31,7 +31,7 @@ module Pr00f
 
       # if a failure occurred so early, it would be a very little use in proceeding
       # without giving it a look first
-      (puts test.fail_message; exit) if test.check! == :failed
+      (puts test.fail_message; exit) if test.failed?
     end
 
     def instance name = :unnamed, &b

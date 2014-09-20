@@ -1,27 +1,13 @@
 module Pr00f
   class Test
-    attr_reader :status
     def initialize &code
       @code_self = code.binding.eval 'self'
       @code      = code
 
-      @status = :pending
+      check
     end
 
-    def check!
-      return @status unless @status == :pending
-
-      begin
-        bool = instance_eval &@code
-      rescue StandardError => e
-        p e
-        @fail_message = e; @status = :failed
-      end
-
-      @status = bool ? :passed : :failed
-    end
-
-    [:passed, :failed, :pending].each do |symbol|
+    [:passed, :failed].each do |symbol|
       define_method "#{symbol}?" do
         @status == symbol
       end
@@ -36,6 +22,16 @@ module Pr00f
     end
 
     private
+
+    def check
+      begin
+        bool = instance_eval &@code
+      rescue
+        @fail_message = $!; @status = :failed
+      end
+
+      @status = bool ? :passed : :failed
+    end
     
     def method_missing method, *args, &b
       if @code_self.respond_to? method
