@@ -2,10 +2,10 @@ module Pr00f
   class Constant
     include CommonCheckers
 
-    attr_reader :object, :passed_tests, :failed_tests
+    attr_reader :this, :passed_tests, :failed_tests
     def initialize constant, &requirements
-      @object = constant
-      @tests  = []
+      @this  = constant # object under test
+      @tests = []
 
       @instances = []
 
@@ -23,7 +23,7 @@ module Pr00f
       test = Test.new do
         undefined_constants = array.reject { |constant| object.constants.include? constant }
 
-        fail_message "#{object} is supposed to include #{undefined_constants}, which doesn't seem to be the case."
+        fail_message "#{this} is supposed to include #{undefined_constants}, which doesn't seem to be the case."
         undefined_constants.empty?
       end
 

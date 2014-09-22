@@ -13,10 +13,10 @@ describe CommonCheckers do
     before :each do
       c = Class.new do
         include CommonCheckers
-        attr_reader :object, :tests
+        attr_reader :this, :tests
 
         def initialize
-          @object = OpenStruct.new present_method: :value
+          @this  = OpenStruct.new present_method: :value
           @tests = []
         end
       end

@@ -2,15 +2,13 @@ module Pr00f
   class Instance
     include CommonCheckers
 
-    attr_reader :object, :name, :tests
+    attr_reader :this, :name, :tests
     def initialize name: :unnamed, &b
-      @object = self
-      @name = name
-
+      @name  = name
       @tests = []
 
       begin
-        @object = b.call
+        @this = b.call
       rescue
         # TODO: Give a bit more helpful information here.
         raise "An error occurred when trying to create the instance #{@name}. #{$!.inspect}"
