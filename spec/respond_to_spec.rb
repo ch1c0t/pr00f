@@ -24,7 +24,7 @@ describe CommonCheckers do
       @i = c.new
     end
 
-    it 'passes if symbol refers to present method' do
+    it 'passes if its symbol refers to a present method' do
       @i.respond_to :present_method
 
       expect(@i.tests.size).to eq 1 
@@ -32,7 +32,7 @@ describe CommonCheckers do
       expect(@i.tests[0].passed?).to eq true
     end
 
-    it 'fails if symbol refers to absent method' do
+    it 'fails if its symbol refers to an absent method' do
       @i.respond_to :absent_method
 
       expect(@i.tests.size).to eq 1 
