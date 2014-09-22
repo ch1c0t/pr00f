@@ -24,23 +24,24 @@ describe Test do
     expect(t.fail_message).to eq 'epic fail'
   end
   
-  it 'can call methods from code context' do
-    m = Module.new do
-      extend self
+  M = Module.new do
+    extend self
 
-      def some_method
+    def test
+      Test.new do
+        some_public_method
+        some_private_method
+
+        fail_message 'fail'
         true
-      end
-
-      def test
-        Test.new do
-          some_method
-          fail_message 'fail'
-          true
-        end
       end
     end
 
-    expect(m.test.passed?).to eq true
+    def some_public_method; end
+    private def some_private_method; end
+  end
+
+  it 'can call methods from code context' do
+    expect(M.test.passed?).to eq true
   end
 end

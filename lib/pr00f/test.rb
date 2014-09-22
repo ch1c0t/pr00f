@@ -34,7 +34,7 @@ module Pr00f
     end
     
     def method_missing method, *args, &b
-      if @code_self.respond_to? method
+      if (@code_self.respond_to? method) || (@code_self.private_methods.include? method)
         @code_self.send method, *args, &b
       else
         super
