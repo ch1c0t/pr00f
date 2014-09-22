@@ -27,7 +27,8 @@ module Pr00f
       begin
         bool = instance_eval &@code
       rescue
-        @fail_message = $!; @status = :failed
+        @fail_message = "#{$!.inspect}\nHappened at:\n#{$!.backtrace[0..3]}"
+        @status = :failed
       end
 
       @status = bool ? :passed : :failed
