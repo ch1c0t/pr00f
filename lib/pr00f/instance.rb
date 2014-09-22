@@ -1,6 +1,6 @@
 module Pr00f
   class Instance
-    include RespondToChecker
+    include CommonCheckers
 
     attr_reader :object, :name, :tests
     def initialize name: :unnamed, &b

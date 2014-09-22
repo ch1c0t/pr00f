@@ -1,6 +1,6 @@
 module Pr00f
   class Constant
-    include RespondToChecker
+    include CommonCheckers
 
     attr_reader :object, :passed_tests, :failed_tests
     def initialize constant, &requirements

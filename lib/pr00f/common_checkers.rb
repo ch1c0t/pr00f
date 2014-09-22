@@ -1,5 +1,5 @@
 module Pr00f
-  module RespondToChecker
+  module CommonCheckers
     def respond_to symbol
       test = Test.new do
         fail_message "#{object} is supposed to have :#{symbol} defined, which doesn't seem to be the case."
