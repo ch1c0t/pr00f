@@ -9,7 +9,11 @@ module Pr00f
 
       @instances = []
 
-      instance_eval &requirements
+      begin
+        instance_eval &requirements
+      rescue BadInstanceDefinitionError
+        @tests << $!.test
+      end
 
       @tests += @instances.map(&:tests).reduce(&:+) unless @instances.empty?
       @passed_tests, @failed_tests = @tests.partition { |test| test.passed? }
@@ -28,10 +32,6 @@ module Pr00f
       end
 
       @tests << test
-
-      # if a failure occurred so early, it would be a very little use in proceeding
-      # without giving it a look first
-      (puts test.fail_message; exit) if test.failed?
     end
 
     def instance name = :unnamed, &b
