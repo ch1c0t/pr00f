@@ -34,8 +34,8 @@ module Pr00f
       @tests << test
     end
 
-    def instance name = :unnamed, &b
-      instance = Instance.new name: name, &b
+    def instance name = :unnamed, &definition
+      instance = Instance.new name: name, &definition
       define_method_for_instance instance unless name == :unnamed
       @instances << instance
     end

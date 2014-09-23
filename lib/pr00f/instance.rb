@@ -17,12 +17,12 @@ module Pr00f
     include CommonCheckers
 
     attr_reader :this, :name, :tests
-    def initialize name: :unnamed, &b
+    def initialize name: :unnamed, &definition
       @name  = name
       @tests = []
 
       begin
-        @this = b.call
+        @this = definition.call
       rescue
         # if a failure occurred so early, it would be a very little use in proceeding
         # without giving it a look first
