@@ -62,4 +62,8 @@ constant Symbol do
   empty do
     respond_to :empty?, with: ->{true}
   end
+
+  ascii do
+    respond_to :empty?, with: ->{false}
+  end
 end
