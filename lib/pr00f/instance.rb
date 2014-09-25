@@ -14,12 +14,11 @@ module Pr00f
   end
 
   class Instance
-    include CommonCheckers
+    prepend Testable
 
-    attr_reader :this, :name, :tests
+    attr_reader :name
     def initialize name: :unnamed, &definition
-      @name  = name
-      @tests = []
+      @name = name
 
       begin
         @this = definition.call

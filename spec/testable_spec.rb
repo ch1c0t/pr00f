@@ -1,10 +1,10 @@
 require_relative './helper'
 require 'ostruct'
 
-describe CommonCheckers do
+describe Testable do
   it 'defines :respond_to' do
     c = Class.new
-    c.include CommonCheckers
+    c.prepend Testable
 
     expect(c.new).to respond_to :respond_to
   end
@@ -12,7 +12,7 @@ describe CommonCheckers do
   context :respond_to do
     before :each do
       c = Class.new do
-        include CommonCheckers
+        prepend Testable
         attr_reader :this, :tests
 
         def initialize

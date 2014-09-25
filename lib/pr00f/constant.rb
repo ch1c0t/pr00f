@@ -1,12 +1,9 @@
 module Pr00f
   class Constant
-    include CommonCheckers
+    prepend Testable
 
-    attr_reader :this, :passed_tests, :failed_tests
     def initialize constant, &requirements
-      @this  = constant # object under test
-      @tests = []
-
+      @this = constant # object under test
       @instances = []
 
       begin
@@ -15,12 +12,16 @@ module Pr00f
         @tests << $!.test
       end
 
-      @tests += @instances.map(&:tests).reduce(&:+) unless @instances.empty?
-      @passed_tests, @failed_tests = @tests.partition { |test| test.passed? }
+      prepare_tests
     end
 
     def fulfill_requirements?
       @tests.all? &:passed?
+    end
+
+    def prepare_tests
+      @tests += @instances.map(&:tests).reduce(&:+) unless @instances.empty?
+      @passed_tests, @failed_tests = @tests.partition { |test| test.passed? }
     end
 
     def constants array
