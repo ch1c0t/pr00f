@@ -1,15 +1,15 @@
 require_relative './helper'
 
-class Object
-  def constant constant, &b
-    Pr00f::Constant.new constant, &b
-  end
-end
-
 describe Constant do
+  describe 'invalid specification' do
+    it 'raises an error' do
+      expect { Constant.from_string 'invalid spec' }.to raise_error Constant::InvalidSpecError
+    end
+  end
+
   context Object do
     before :all do
-      @constant = eval IO.read "#{__dir__}/core/object.rb"
+      @constant = Constant.from_string IO.read "#{__dir__}/core/object.rb"
     end
 
     it 'has one passed test' do
@@ -19,7 +19,7 @@ describe Constant do
 
   context Constant do
     before :all do
-      @constant = eval IO.read "#{__dir__}/meta/constant.rb"
+      @constant = Constant.from_string IO.read "#{__dir__}/meta/constant.rb"
     end
 
     it 'has no failed tests' do
