@@ -13,11 +13,9 @@ describe Testable do
     before :each do
       c = Class.new do
         prepend Testable
-        attr_reader :this, :tests
 
         def initialize
-          @this  = OpenStruct.new present_method: :value
-          @tests = []
+          @this = OpenStruct.new present_method: :value
         end
       end
 
