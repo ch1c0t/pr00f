@@ -16,14 +16,12 @@ module Pr00f
     end
 
     def constants array
-      test = Test.new do
-        undefined_constants = array.reject { |constant| object.constants.include? constant }
+      @constants = Test.new do
+        undefined_constants = array.reject { |constant| this.constants.include? constant }
 
         fail_message "#{this} is supposed to include #{undefined_constants}, which doesn't seem to be the case."
         undefined_constants.empty?
       end
-
-      @constants << test
     end
 
     def instance name = :unnamed, &definition

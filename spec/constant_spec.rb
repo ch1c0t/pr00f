@@ -10,7 +10,23 @@ describe Constant do
     expect { Constant.from_string 'invalid spec' }.to raise_error Constant::InvalidSpecError
   end
 
-  it 'parses bare methods' do
+  it 'check for presence of constants' do
+    class A
+      class B; end
+      class C; end
+    end
+
+    constant = Constant.new A do
+      constants [:B, :C]
+    end
+
+    constants = constant.instance_variable_get :@constants
+
+    expect(constants).to be_kind_of Test
+    expect(constants.passed?).to eq true
+  end
+
+  it 'check for presenc of bare methods' do
     constant = Constant.new Object do
       respond_to :new
       respond_to :absent
