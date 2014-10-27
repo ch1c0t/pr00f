@@ -16,12 +16,14 @@ describe Test do
   end
 
   it 'allows to set a fail message' do
+    local_variable = 'local'
     t = Test.new do
-      fail_message 'epic fail'
+      fail_message "#{local_variable} epic fail"
       false
     end
 
-    expect(t.fail_message).to eq 'epic fail'
+    t.failed?
+    expect(t.fail_message).to eq 'local epic fail'
   end
   
   M = Module.new do

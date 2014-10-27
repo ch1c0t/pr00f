@@ -1,18 +1,32 @@
 module Pr00f
   module Testable
+    class MethodTest < Test
+      attr_reader :signatures
+      def << signature
+        input, output = signature
+      end
+    end
+
     attr_reader :this 
     def initialize *args
-      @methods = []
+      @methods = {}; def @methods.to_a; values end
       super
     end
 
-    def respond_to symbol
-      test = Test.new do
-        fail_message "#{this} is supposed to have :#{symbol} defined, which doesn't seem to be the case."
-        this.respond_to? symbol
-      end
+    def respond_to name, input = nil, with: nil
+      if @methods[name]
+      else
+        test = MethodTest.new do
+          fail_message "#{this} is supposed to have :#{name} defined, which doesn't seem to be the case."
+          this.respond_to? name
+        end
 
-      @methods << test
+        if input || with
+          test << [input, with]
+        end
+
+        @methods[name] = test
+      end
     end
 
     def constants array

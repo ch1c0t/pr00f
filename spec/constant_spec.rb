@@ -26,7 +26,7 @@ describe Constant do
     expect(constants.passed?).to eq true
   end
 
-  it 'check for presenc of bare methods' do
+  it 'check for presence of bare methods' do
     constant = Constant.new Object do
       respond_to :new
       respond_to :absent
@@ -35,7 +35,7 @@ describe Constant do
     methods = constant.instance_variable_get :@methods
 
     expect(methods.size).to eq 2
-    expect(methods[0].passed?).to eq true
-    expect(methods[1].passed?).to eq false
+    expect(methods[:new].passed?).to eq true
+    expect(methods[:absent].passed?).to eq false
   end
 end

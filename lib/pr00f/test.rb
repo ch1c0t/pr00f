@@ -1,14 +1,13 @@
 module Pr00f
   class Test
     def initialize &code
-      @code_self = code.binding.eval 'self'
-      @code      = code
-
-      check
+      setup_code &code if block_given?
+      @status = :pending
     end
 
     [:passed, :failed].each do |symbol|
       define_method "#{symbol}?" do
+        check if @status == :pending
         @status == symbol
       end
     end
@@ -22,6 +21,11 @@ module Pr00f
     end
 
     private
+
+    def setup_code &code
+      @code_self = code.binding.eval 'self'
+      @code      = code
+    end
 
     def check
       begin
