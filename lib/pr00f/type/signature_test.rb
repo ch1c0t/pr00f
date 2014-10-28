@@ -5,6 +5,9 @@ module Pr00f
                     :output_type,
                     :output_value
 
+      attr_reader :instances,
+                  :outputs
+
       def initialize **kwargs
         @input_type = kwargs[:input_type]
         super()
@@ -12,11 +15,8 @@ module Pr00f
       
       def check(method_name:, this:)
         test = if input_type
-          instances = Type[input_type].instances
-          raise "Unfortunately, no instances for #{this} are available." unless instances
-
-          instances = instances.values.map &:value
-          outputs = instances.map { |i| this.send method_name, i }
+          @instances = Type[input_type].instances.values
+          @outputs   = instances.map { |i| this.send method_name, i.value }
 
           unless output_type
             Test.new do
