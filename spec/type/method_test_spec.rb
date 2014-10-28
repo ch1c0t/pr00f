@@ -14,7 +14,7 @@ describe Type::MethodTest do
   describe '#check_signatures_from' do
     it do
       test = MethodTest.new :===, Symbol
-      test.check_signatures_from do
+      test.check_signatures do
         sig Symbol do with { true } end
         sig String do with { false } end
       end

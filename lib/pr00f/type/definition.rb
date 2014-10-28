@@ -27,7 +27,7 @@ module Pr00f
 
       def respond_to method_name, &method_description
         test = MethodTest.new method_name, this
-        test.check_signatures_from &method_description if test.existential_test.passed? && block_given?
+        test.check_signatures &method_description if test.existential_test.passed? && block_given?
         @method_tests[method_name] = test
       end
     end

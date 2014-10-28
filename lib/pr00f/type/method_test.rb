@@ -18,7 +18,7 @@ module Pr00f
         end
       end
 
-      def check_signatures_from &description
+      def check_signatures &description
         @signatures = []
         instance_eval &description
       end
