@@ -27,7 +27,8 @@ module Pr00f
       attr_reader :method_name, :this
 
       def sig type
-        @current_signature = SignatureTest.new input_type: type
+        @current_signature = SignatureTest.new
+        @current_signature.input[:array] = [[:type, type]]
         yield
         @current_signature = nil
       end
@@ -36,9 +37,9 @@ module Pr00f
         signature = @current_signature || SignatureTest.new
 
         if block_given?
-          signature.output_value = yield
+          signature.output = [:value, yield]
         else
-          signature.output_type = type
+          signature.output = [:type, type]
         end
 
         signature.check method_name: method_name, this: this
