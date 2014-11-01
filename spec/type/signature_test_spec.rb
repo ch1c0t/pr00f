@@ -8,7 +8,6 @@ describe Type::SignatureTest do
       test.output = [:type, Array]
       test.check this: Symbol, method_name: :all_symbols
 
-      expect(test.arity).to eq 0
       expect(test.passed?).to eq true
     end
 
@@ -16,7 +15,6 @@ describe Type::SignatureTest do
       test.output = [:type, Symbol]
       test.check this: Symbol, method_name: :all_symbols
 
-      expect(test.arity).to eq 0
       expect(test.passed?).to eq false
     end
 
@@ -24,7 +22,6 @@ describe Type::SignatureTest do
       test.output = [:value, 'Symbol']
       test.check this: Symbol, method_name: :to_s
 
-      expect(test.arity).to eq 0
       expect(test.passed?).to eq true
     end
 
@@ -32,8 +29,11 @@ describe Type::SignatureTest do
       test.output = [:value, 'invalid output']
       test.check this: Symbol, method_name: :to_s
 
-      expect(test.arity).to eq 0
       expect(test.passed?).to eq false
+    end
+
+    after :each do
+      expect(test.arity).to eq 0
     end
   end
 
@@ -44,7 +44,6 @@ describe Type::SignatureTest do
 
       test.check this: Symbol, method_name: :===
 
-      expect(test.arity).to eq 1
       expect(test.passed?).to eq true
     end
 
@@ -54,8 +53,20 @@ describe Type::SignatureTest do
 
       test.check this: Symbol, method_name: :===
 
-      expect(test.arity).to eq 1
       expect(test.passed?).to eq true
+    end
+
+    it do
+      test.input[:array] = [[:type, Integer], [:value, '*']]
+      test.output = [:type, Array]
+
+      test.check this: Array, method_name: :new
+
+      expect(test.passed?).to eq true
+    end
+
+    after :each do
+      expect(test.arity).to eq 1
     end
   end
 end

@@ -53,7 +53,6 @@ module Pr00f
     instance { 'string with spaces' }
   end
   Type.new Integer do
-    instance { -1 }
     instance { 0 }
     instance { 1 }
     instance { 42 }

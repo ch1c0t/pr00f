@@ -1,11 +1,20 @@
 module Pr00f
   class Type
     class SignatureTest < Test
-      attr_reader   :input
-      attr_accessor :output
+      attr_reader :input,
+                  :output,
+                  :tests,
+                  :failed_tests
 
-      def initialize **kwargs
+      def output= tuple
+        @output = tuple
+        @prescribed_type  = tuple[1] if tuple[0] == :type
+        @prescribed_value = tuple[1] if tuple[0] == :value
+      end
+
+      def initialize
         @input = {}
+        @tests = []
         super()
       end
 
@@ -14,42 +23,56 @@ module Pr00f
       end
       
       def check(method_name:, this:)
-        test = case arity
+        case arity
         when 0
           actual_value = this.send method_name
 
-          case output[0]
-          when :type
-            type = output[1]
-            Test.new do
-              actual_value.is_a? type
-            end
-          when :value
-            prescribed_value = output[1]
-            Test.new do
-              actual_value == prescribed_value
-            end
-          end
+          check_type_of actual_value if prescribed_type
+          check_value_of actual_value if prescribed_value
         when 1
           if args = @input[:array]
-            if args.size == 1
-              ins = Type[args[0][1]].instances.values
-              ous = ins.map { |i| this.send method_name, i.value }
-
-              if output[0] == :value
-                Test.new do
-                  ous.all? { |o| o == output[1] }
-                end
+            args.map! do |a|
+              if a[0] == :value
+                [a[1]]
+              elsif a[0] == :type
+                Type[a[1]].instances.values.map &:value
               end
             end
+
+            first = args.shift
+            inputs = args.empty? ? first : (first.product *args)
+            outputs = inputs.map { |i| this.send method_name, *i }
+
+            outputs.each { |o| check_type_of o } if prescribed_type
+            outputs.each { |o| check_value_of o } if prescribed_value
           end
         when 2
         when 3
         end
 
-        test.passed? # without this line @fail_message is nil, because the Test is lazy and not gonna run without request
-        fail_message test.fail_message
-        @status = test.passed? ? :passed : :failed
+        @failed_tests = tests.select { |t| t.failed? }
+        @status = if @failed_tests.empty?
+                    :passed
+                  else
+                    fail_message "There are #{@failed_tests.size} failed test(s)."
+                    :failed
+                  end
+      end
+
+      private
+      attr_reader :prescribed_type,
+                  :prescribed_value
+
+      def check_type_of value
+        @tests << Test.new do
+          value.is_a? prescribed_type
+        end
+      end
+
+      def check_value_of value
+        tests << Test.new do
+          value == prescribed_value
+        end
       end
     end
   end
