@@ -42,7 +42,7 @@ describe Type do
     end
 
     it 'predefines some core types' do
-      types = [Symbol, String, Array, Integer]
+      types = [Symbol, String, Array, Numeric, Integer]
       types.each { |type| expect(Type[type]).to be_kind_of Type }
     end
 

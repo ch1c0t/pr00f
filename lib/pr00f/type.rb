@@ -52,6 +52,15 @@ module Pr00f
     instance { '' }
     instance { 'string with spaces' }
   end
+
+  Type.new Numeric do
+    instance { Math::PI }
+    instance { 0.5r }
+    instance { -1 }
+    instance { 0 }
+    instance { 1 }
+    instance { 42 }
+  end
   Type.new Integer do
     instance { 0 }
     instance { 1 }
