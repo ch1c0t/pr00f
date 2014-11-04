@@ -75,8 +75,30 @@ describe Type do
     end
   end
 
+  it 'inherit instances if they are defined for its ancestors' do
+    class A; end
+    class B < A; end
+
+    Type.new A do
+      instance { 0 }
+      instance { 1 }
+    end
+
+    Type.new B do
+      instance { 42 }
+    end
+
+    expect(Type[B].instances.size).to eq 3
+
+    values = Type[B].instances.values.map &:value
+    [0,1,42].each do |i|
+      expect(values).to include i
+    end
+  end
+
   after :each do
     Type[T] = nil
     Type.reload Symbol
+    Type[A] = Type[B] = nil
   end
 end

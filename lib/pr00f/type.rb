@@ -23,9 +23,26 @@ module Pr00f
       end
     end
 
-    [:instances, :method_tests].each do |getter|
-      define_method getter do
-        (@@definitions[@type].map &getter).inject &:merge
+    def method_tests
+      (@@definitions[@type].map &:method_tests).inject &:merge
+    end
+
+    def instances
+      (@@definitions[@type].map &:instances).inject(&:merge).merge ancestral_instances
+    end
+
+    def ancestral_instances
+      if @type.is_a? Class
+        defined_ancestors = @type.ancestors[1..-1].select { |a| Type[a] }
+        if defined_ancestors.empty?
+          {}
+        else
+          defined_ancestors
+            .map { |a| Type[a].instances }
+            .inject &:merge
+        end
+      else
+        {}
       end
     end
 
@@ -56,7 +73,7 @@ module Pr00f
   Type.new Numeric do
     instance { Math::PI }
     instance { 0.5r }
-    instance { -1 }
+    #instance { -1 }
     instance { 0 }
     instance { 1 }
     instance { 42 }
