@@ -24,11 +24,11 @@ module Pr00f
     end
 
     def method_tests
-      (@@definitions[@type].map &:method_tests).inject &:merge
+      @@definitions[@type].inject(&:+).method_tests
     end
 
     def instances
-      (@@definitions[@type].map &:instances).inject(&:merge).merge ancestral_instances
+      @@definitions[@type].inject(&:+).instances.merge ancestral_instances
     end
 
     def ancestral_instances
