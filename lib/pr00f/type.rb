@@ -31,6 +31,16 @@ module Pr00f
       @@definitions[@type].inject(&:+).instances.merge ancestral_instances
     end
 
+    def initialize type, &definition
+      definition = Definition.new type, &definition
+      @@definitions[type] << definition
+
+      @type = type
+      @@types[type] ||= self
+    end
+
+    private
+
     def ancestral_instances
       if @type.is_a? Class
         defined_ancestors = @type.ancestors[1..-1].select { |a| Type[a] }
@@ -44,14 +54,6 @@ module Pr00f
       else
         {}
       end
-    end
-
-    def initialize type, &definition
-      definition = Definition.new type, &definition
-      @@definitions[type] << definition
-
-      @type = type
-      @@types[type] ||= self
     end
   end
 
