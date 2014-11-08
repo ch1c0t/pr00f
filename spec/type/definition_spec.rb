@@ -84,4 +84,25 @@ describe Type::Definition do
       expect(definition.method_tests[:===].signatures.size).to eq 2
     end
   end
+
+  describe 'merging of definitions' do
+    it do
+      first_definition = D.new Object do
+        instance { 0 }
+        instance { 1 }
+
+        respond_to :new
+      end
+
+      second_definition = D.new Object do
+        instance { 42 }
+        respond_to :send
+      end
+
+      merged_definition = first_definition + second_definition
+
+      expect(merged_definition.method_tests.size).to eq 2
+      expect(merged_definition.instances.size).to eq 3
+    end
+  end
 end
