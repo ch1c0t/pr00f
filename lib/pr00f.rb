@@ -1,6 +1,6 @@
 %w!
   test
-  type
+  core_ext/type
   core_ext/object
   testable
   constant

@@ -1,5 +1,3 @@
-require_relative './helper'
-
 describe Type do
   before :all do
     T = :type
