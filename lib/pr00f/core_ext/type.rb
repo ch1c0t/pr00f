@@ -1,5 +1,36 @@
 module Pr00f
   class Type
+    class << self
+      CORETYPE_DEFINITION = -> do
+        Symbol.type do
+          instance { :ascii }
+          instance { :'' }
+          instance { :'symbol with spaces' }
+        end
+
+        Array.type do
+          instance :empty do [] end
+          instance :amalgamation do
+            [Object, Object.new, :symbol, 'string', 42]
+          end
+        end
+
+        String.type do
+          instance { 'string' }
+          instance { '' }
+          instance { 'symbol with spaces' }
+        end
+      end
+
+      def load_core
+        CORETYPE_DEFINITION.call
+      end
+
+      def clear_core
+        [Symbol, Array, String].each { |t| t.type = nil }
+      end
+    end
+
     class Instance
       attr_reader :reason_of_failure
 

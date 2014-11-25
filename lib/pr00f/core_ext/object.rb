@@ -1,9 +1,9 @@
 class Object
   def type &definition
-    @type ||= if block_given?
-      Type.new self, &definition
+    if block_given?
+      @type = Type.new self, &definition
     else
-      Type.new self
+      @type ||= Type.new self
     end
   end
 

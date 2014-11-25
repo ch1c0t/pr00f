@@ -50,6 +50,23 @@ describe 'Object#type' do
       expect(Symbol.type.instances.values.first).to be_kind_of Type::Instance
       expect(Symbol.type.instances.values.first.value).to eq :var
     end
+
+    it 'can load and clear definitions of core types' do
+      types = [Symbol, Array, String]
+      types.each do |t|
+        expect(t.type.instances).to be_empty
+      end
+
+      Type.load_core
+      types.each do |t|
+        expect(t.type.instances).to_not be_empty
+      end
+
+      Type.clear_core
+      types.each do |t|
+        expect(t.type.instances).to be_empty
+      end
+    end
   end
 
   describe 'type checking' do
@@ -105,9 +122,12 @@ describe 'Object#type' do
         expect(negative_messages[:nonexistent_method].reason_of_failure).to eq reason
       end
     end
+    
+    describe 'with signatures' do
+    end
   end
 
   after :each do
-    Symbol.type = nil
+    Type.clear_core
   end
 end
